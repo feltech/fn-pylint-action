@@ -14,6 +14,10 @@ It is assumed that `pylint` is already installed in the environment.
 
 **Required** The paths to instruct `pylint` to scan, space-separated.
 
+## `pylint-executable`
+
+Override `pylint` executable (default: `pylint`).
+
 ## `pylint-rcfile`
 
 Pylint configuration file location. Specifically, the value of

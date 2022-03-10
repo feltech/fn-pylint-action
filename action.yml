@@ -1,6 +1,9 @@
 name: "Pylint"
 description: "Runs pylint and annotates a PR"
 inputs:
+  pylint-executable:
+    description: "Override executable (default: `pylint`)"
+    required: false
   pylint-disable:
     description: "Checks to disable"
     required: false

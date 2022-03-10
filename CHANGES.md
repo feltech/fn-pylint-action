@@ -1,6 +1,14 @@
 Changes
 =======
 
+v1.2.0
+------
+
+### New features
+
+- Added `pylint-executable` input, allowing the `pylint` executable
+  to be overridden from the default.
+
 v1.1.0
 ------
 

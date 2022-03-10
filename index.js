@@ -19,6 +19,7 @@ const exec = require('@actions/exec');
  * Execute pylint and report issues, if any found.
  */
 function run() {
+    const pylintExe = core.getInput('pylint-executable') || "pylint";
     const pylintDisable = core.getInput('pylint-disable') || "";
     const pylintRCFile = core.getInput('pylint-rcfile') || "";
     const pylintPaths = core.getInput('pylint-paths');
@@ -28,7 +29,7 @@ function run() {
 
     // Run pylint via `exec()`, which throws an exception if the
     // process exits with a non-zero exit code.
-    exec.exec("pylint", [
+    exec.exec(pylintExe, [
         `--disable=${pylintDisable}`,
         `--ignore-paths=${pylintIgnorePaths}`,
         `--rcfile=${pylintRCFile}`,
