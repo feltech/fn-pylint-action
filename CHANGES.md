@@ -1,6 +1,13 @@
 Changes
 =======
 
+v1.1.1
+------
+
+### Bug fixes
+
+- Bumped `node-fetch` version to `v2.6.7` (CVE-2022-0235).
+
 v1.1.0
 ------
 
