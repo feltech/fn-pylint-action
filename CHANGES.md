@@ -1,6 +1,21 @@
 Changes
 =======
 
+v1.1.3
+------
+
+### Improvements
+
+- Bumped `node` version from `node12` to `node16`, in response to
+  deprecation warnings.
+
+v1.1.2
+------
+
+### Bug fixes
+
+- Bumped @actions/core from 1.6.0 to 1.9.1
+
 v1.1.1
 ------
 
