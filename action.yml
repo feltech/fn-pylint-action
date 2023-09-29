@@ -1,18 +1,9 @@
 name: "Pylint"
 description: "Runs pylint and annotates a PR"
 inputs:
-  pylint-disable:
-    description: "Checks to disable"
-    required: false
-  pylint-rcfile:
-    description: "Config file for Pylint"
-    required: false
-  pylint-paths:
-    description: "Paths to Python files"
+  pylint-args:
+    description: "Arguments to pass to pylint"
     required: true
-  pylint-ignore-paths:
-    description: "Paths to ignore"
-    required: false
 runs:
   using: "node16"
   main: "dist/index.js"

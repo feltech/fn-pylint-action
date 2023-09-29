@@ -14,37 +14,31 @@
 
 const core = require('@actions/core');
 const exec = require('@actions/exec');
+const shellParse = require('shell-quote/parse')
 
 /**
  * Execute pylint and report issues, if any found.
  */
 function run() {
-    const pylintDisable = core.getInput('pylint-disable') || "";
-    const pylintRCFile = core.getInput('pylint-rcfile') || "";
-    const pylintPaths = core.getInput('pylint-paths');
-    const pylintIgnorePaths = core.getInput('pylint-ignore-paths') || "";
+    let pylintArgs = shellParse(core.getInput('pylint-args'));
+    pylintArgs.push("--output-format=json")
 
     let pylintOutput = "";  // Pylint process output.
 
     // Run pylint via `exec()`, which throws an exception if the
     // process exits with a non-zero exit code.
-    exec.exec("pylint", [
-        `--disable=${pylintDisable}`,
-        `--ignore-paths=${pylintIgnorePaths}`,
-        `--rcfile=${pylintRCFile}`,
-        `--output-format=json`,
-        ...pylintPaths.split(" ")
-    ], {
-        listeners: {
-            stdout: (data) => pylintOutput += data.toString()
-        }
-    }).catch(pylintError => {
+    exec.exec("pylint",
+        pylintArgs, {
+            listeners: {
+                stdout: (data) => pylintOutput += data.toString()
+            }
+        }).catch(pylintError => {
 
         // The exception thrown by `exec` doesn't include the exit
         // code as a field, we have to parse the error message.
 
         // Error 32, is a usage error
-        if(pylintError.message.indexOf("exit code 32") > 0) {
+        if (pylintError.message.indexOf("exit code 32") > 0) {
             console.error(pylintError);
             core.setFailed()
             return;
@@ -53,7 +47,7 @@ function run() {
         // Any other exit code means one or more errors were
         // found in the source so report these as we like.
         try {
-            reportResults(JSON.parse(pylintOutput), pylintDisable);
+            reportResults(JSON.parse(pylintOutput), pylintArgs);
         } catch (reportingError) {
             console.error(pylintError);
             console.error(reportingError);
@@ -67,11 +61,10 @@ function run() {
  * Report a summary followed by per-line annotations.
  *
  * @param pylintMessages List of Pylint messages decoded from JSON.
- * @param pylintDisable Disabled checks to add to summary, potentially
- *  useful for debugging.
- *
+ * @param pylintArgs Arguments to add to summary, potentially useful for
+ * debugging.
  */
-function reportResults(pylintMessages, pylintDisable) {
+function reportResults(pylintMessages, pylintArgs) {
     const pylintErrors = pylintMessages.filter(message => message.type === 'error');
     const pylintWarnings = pylintMessages.filter(message => message.type === 'warning');
     const pylintConvention = pylintMessages.filter(message => message.type === 'convention');
@@ -80,10 +73,7 @@ function reportResults(pylintMessages, pylintDisable) {
 
     // Construct summary report.
 
-    let summaryTitle = "Pylint linter issues detected";
-    if (pylintDisable) {
-        summaryTitle += ` (disabled checks '${pylintDisable}')`;
-    }
+    let summaryTitle = `Pylint linter issues detected: (options '${pylintArgs}')`;
     const summaryLines = [summaryTitle];
 
     const appendToSummaryIfNonEmpty = (messages, severity) => messages.length &&
