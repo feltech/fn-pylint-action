@@ -10,31 +10,15 @@ It is assumed that `pylint` is already installed in the environment.
 
 ## Inputs
 
-## `pylint-paths`
+## `pylint-args`
 
-**Required** The paths to instruct `pylint` to scan, space-separated.
-
-## `pylint-rcfile`
-
-Pylint configuration file location. Specifically, the value of
-`pylint`'s `--rcfile=` command-line option.
-
-## `pylint-disable`
-
-Pylint checks to disable. Specifically, the value of `pylint`'s
-`--disable=` command-line option.
-
-## `pylint-ignore-paths`
-
-The paths to pass to `pylint`s `--ignore-paths` command-line option.
+**Required** The arguments to pass to `pylint`, as if on a command line.
 
 ## Example usage
 ```yaml
 uses: TheFoundryVisionmongers/fn-pylint-action@v1
 with:
-  pylint-disable: "C,I,R"  # Only errors and warnings.
-  pylint-rcfile: "./pyproject.toml"
-  pylint-paths: "python tests"
+  pylint-args: "--ignore=C,I,R --rcfile=pyproject.toml my_project tests"
 ```
 
 ## License
